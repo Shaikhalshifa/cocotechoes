@@ -1,0 +1,51 @@
+import random
+from datetime import datetime, timedelta
+class LibraryMember:
+    def __init__(self, name):
+        self.name = name
+        self.books = []
+
+class Book:
+    def __init__(self, name):
+        self.name = name
+        self.checkout_date = self.random_date()
+        self.return_date = self.random_date()
+
+    def random_date(self):
+        start_date = datetime(2023, 1, 1)
+        end_date = datetime(2024, 1, 1)
+        random_days = random.randint(0, (end_date - start_date).days)
+        return start_date + timedelta(days=random_days)
+
+def generate_library_data(num_members):
+    library_members = [LibraryMember(f"Member{i+1}") for i in range(num_members)]
+
+    for member in library_members:
+        num_books = random.randint(10, 30)
+        member.books = [Book(f"Book{j+1}") for j in range(num_books)]
+
+    return library_members
+
+def calculate_average_days(library_members):
+    total_days = 0
+    total_books = 0
+
+    for member in library_members:
+        for book in member.books:
+            total_days += (book.return_date - book.checkout_date).days
+            total_books += 1
+
+    if total_books == 0:
+        return 0  # To avoid division by zero if there are no books
+
+    return total_days / total_books
+
+if __name__ == "__main__":
+    num_members = 10
+    library_members = generate_library_data(num_members)
+
+    for member in library_members:
+        print(f"{member.name} has {len(member.books)} books.")
+
+    average_days = calculate_average_days(library_members)
+    print(f"\nAverage number of days each member keeps a book: {average_days:.2f} days")
